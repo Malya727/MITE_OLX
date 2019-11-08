@@ -1,3 +1,51 @@
+<?php
+session_start();
+
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "mite_olx";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error)
+{
+    die("Connection failed: " . $conn->connect_error);
+}
+if($_SERVER["REQUEST_METHOD"]=="POST")
+{
+    $username = $_POST['email'];
+    $password = $_POST['password'];
+    $querry="select * from user where email='$username' and password='$password'";
+    $user_authentication_result=mysqli_query($conn,$querry) or die(mysqli_error($conn));
+    $rows_fetched=mysqli_num_rows($user_authentication_result);
+    if($rows_fetched==0)
+    {
+        //no user
+        //redirecting to same login page
+        ?>
+        <script>
+            window.alert("Wrong username or password");
+        </script>
+        <?php
+        //header('location: login');
+        //echo "Wrong email or password.";
+    }
+    else
+    {
+        $row=mysqli_fetch_array($user_authentication_result);
+        $_SESSION['email']=$email;
+        $_SESSION['id']=$row['id'];  //user id?>
+        <script>
+        window.location = "http://localhost/mite_olx/after_login.html" ;
+        </script><?php
+    
+    }
+
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html>
 
@@ -14,12 +62,12 @@
 <body>
     <div class="login-dark">
         <br/><br/><h2 style="text-align: center; color:white; text-shadow:2px 2px black;">Login Form</h2>
-        <form method="post">
+        <form method="post" action="#">
             <div class="illustration"><i class="icon ion-ios-locked-outline"></i></div>
             <div class="form-group"><input class="form-control" type="text" name="email" placeholder="Enter Email ID"></div>
             <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Enter Password"></div>
             <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Log In</button></div>
-            <a class="forgot" href="create_new_user.html">Create Account ?</a>
+            <a class="forgot" href="create_new_user.php">Create Account?</a>
         </form>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>

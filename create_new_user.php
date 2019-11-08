@@ -1,3 +1,54 @@
+<?php
+session_start();
+
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "mite_olx";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error)
+{
+    die("Connection failed: " . $conn->connect_error);
+}
+if($_SERVER["REQUEST_METHOD"] == "POST")
+{
+$name = $_POST["name"];
+$pnumber = $_POST["pnumber"];
+$branch = $_POST["branch"];
+$email = $_POST["email"];
+$password = $_POST["password"];
+$sql = "INSERT INTO user VALUES ('$name' , '$pnumber' , '$branch' , '$email' , '$password')";
+
+if ($conn->query($sql) === TRUE) 
+{
+    ?>
+    <script>
+        alert("Account Created Successfully!!");
+        window.location = "http://localhost/mite_olx/create_new_user.php" ;
+    </script>
+    <?php
+} 
+else 
+{
+    ?><script>
+        alert("Account Creation Failed!!");
+        window.location = "http://localhost/mite_olx/create_new_user.php" ;
+    </script><?php
+}
+}
+
+$conn->close();
+?>
+
+
+
+
+
+
+
+
 <!doctype html>
 <html lang="en">
 
@@ -11,10 +62,10 @@
     <title>Create Account Here</title>
 </head>
 
-<body>
+<body style="background-color: #475d62;">
     <div class="container">
         <br />
-        <div style="text-align: center; color: brown; text-shadow: 1px 1px black;">
+        <div style="text-align: center; color: white; text-shadow: 3px 3px black;">
             <h2>Create Your Account Here</h2>
         </div>
         <br />
@@ -23,7 +74,7 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading">Please Fill Below Form</div>
                     <div class="panel-body">
-                        <form role="Form" method="post" action="" accept-charset="UTF-8">
+                        <form role="Form" method="post" action="#" accept-charset="UTF-8">
                             <div class="form-group">
                                 <label for="fname">Name</label>
                                 <input type="text" id="fname" class="form-control" name="name"
@@ -61,6 +112,7 @@
                                 <button type="submit" class="btn btn-primary btn-lg" id="submitbtn"
                                     name="submit">Create</button>
                             </div>
+                            <div><center><a class="forgot" href="get_started.php">Already Have Account?<br/> Sign In</a></center></div>
                         </form>
                     </div>
                 </div>
