@@ -8,44 +8,43 @@ $password = "";
 $dbname = "mite_olx";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error)
-{
+if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-if($_SERVER["REQUEST_METHOD"]=="POST")
-{
-$n1 = (rand(10,5000));
-$n2 = date("Ymd");
-$n4 = time();
-$id = $n1 . $n2 . $n4;
-$i_name = $_POST["item_name"];
-$pic = addslashes(file_get_contents($_FILES["pic"]["tmp_name"]));
-$price = $_POST["price"];
-$description = $_POST["description"];
 
-$sql = "INSERT INTO item_to_sale VALUES ('$id' , '$i_name' , '$pic' , '$price' , '$description')";
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $user = $_SESSION['email'];
+    $n1 = (rand(10, 5000));
+    $n2 = date("Ymd");
+    $n4 = time();
+    $id = $n1 . $n2 . $n4;
+    $i_name = $_POST['item_name'];
+    $na = $_FILES["image"]["name"];
+    $ext = explode(".", $na);
+    $_FILES["image"]["name"] = $id . "." . end($ext);
+    $filepath = "uploads/" . $_FILES["image"]["name"];
+    $price = $_POST['price'];
+    move_uploaded_file($_FILES["image"]["tmp_name"], $filepath);
+    $description = $_POST['description'];
 
-if ($conn->query($sql) === TRUE) 
-{
-    ?>
-    <script>
-        alert("Item Added Successfully!!");
-        window.location = "http://localhost/mite_olx/add_item_to_sale.php" ;
-    </script>
+    $sql = "INSERT INTO item_to_sale VALUES ('$user' , '$id' , '$i_name' , '$price' , '$filepath' , '$description')";
+
+    if ($conn->query($sql) === TRUE) {
+        ?>
+        <script>
+            alert("Item Added Successfully!!");
+            window.location = "http://localhost/mite_olx/add_item_to_sale.php";
+        </script>
     <?php
-} 
-else 
-{
-    ?>
-    <script>
-        // alert("Failed to Add Item!!");
-        // window.location = "http://localhost/mite_olx/add_item_to_sale.php" ;
-    </script>
-    <?php
-}
-  
-
-$conn->close();
+        } else {
+            ?>
+        <script>
+            alert("Failed to Add Item!!");
+            window.location = "http://localhost/mite_olx/add_item_to_sale.php";
+        </script>
+<?php
+    }
+    $conn->close();
 }
 ?>
 
@@ -61,31 +60,27 @@ $conn->close();
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <title>Add item</title>
-    <script>
-        $(document).ready(function(){
-            $('submitbtn').click(function(){
-                var image_name = $('#pic').val();
-                if(image_name == '')
-                {
-                    alert("please Select a Image");
-                    return false;
-                }
-                else
-                {
-                    var ext = $('#pic').val().split('.').pop().toLowerCase();
-                    if(jQuery.inArray(ext , ['gif' , 'png' , 'jpg' , 'jpeg']) == -1)
-                    {
-                        alert("Invalid Image Type");
-                    }
-                    $('#pic').val('');
-                    return false;
-                }
-            });
-        });
-    </script>
 </head>
 
 <body style="background-color: #475d62;">
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="nav navbar-nav">
+        <a class="navbar-brand" href="after_login.php">MITE OLX</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="add_item_to_sale.php">Add New Item</a></li>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <li><a href="update_delete.php">Update / Delete</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li style="color:white"><?php echo "Hello, ".$_SESSION['name']; ?></li>
+        <li><a href="get_started.php"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+      </ul>
+    </div>
+
+  </nav>
     <div class="container">
         <br />
         <div style="text-align: center; color: white; text-shadow: 3px 3px black;">
@@ -97,14 +92,15 @@ $conn->close();
                 <div class="panel panel-primary">
                     <div class="panel-heading">Please Fill Below Form</div>
                     <div class="panel-body">
-                        <form role="Form" method="post" action="#" accept-charset="UTF-8">
+                        <form role="Form" method="post" action="#" accept-charset="UTF-8" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="fname">Item - Name</label>
                                 <input type="text" id="fname" class="form-control" name="item_name" placeholder="Enter Your Item Name">
                             </div>
                             <div class="form-group">
                                 <label>Item Image</label>
-                                <input type="file" name="pic" id="pic" accept="image/*">
+                                <input type="file" name="image" id="pic">
+                                <div id="error_msg" style="color:red"></div>
                             </div>
                             <div class="form-group">
                                 <label for="lname">Price</label>
@@ -124,10 +120,7 @@ $conn->close();
             </div>
         </div>
     </div>
-    
+
 </body>
 
 </html>
-
-
-
