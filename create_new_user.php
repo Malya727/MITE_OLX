@@ -61,7 +61,7 @@ $conn->close();
     <title>Create Account Here</title>
     <script type="text/javascript">
     function validateForm()
-    { console.log("working...")
+    {
         var password = document.getElementById('password').value;
         var re_password = document.getElementById('repassword').value;
         var name = document.getElementById('name').value;

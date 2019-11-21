@@ -15,7 +15,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST")
 {
     $username = $_POST['email'];
     $password = $_POST['password'];
-    $querry="select * from user where email= '$username' and password= '$password'";
+    $querry="select * from user where email= '$username' and password = '$password'";
     $user_authentication_result=mysqli_query($conn,$querry) or die(mysqli_error($conn));
     $rows_fetched=mysqli_num_rows($user_authentication_result);
     if($rows_fetched==0)

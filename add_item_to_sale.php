@@ -75,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <li><a href="update_delete.php">Update / Delete</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li style="color:white"><?php echo "Hello, ".$_SESSION['name']; ?></li>
+      <li><a href="#"><span class="glyphicon glyphicon glyphicon-user"></span> <?php echo "Hello, " . $_SESSION['name']; ?></a></li>
         <li><a href="get_started.php"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       </ul>
     </div>

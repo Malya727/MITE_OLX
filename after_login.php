@@ -35,8 +35,7 @@
         <li><a href="update_delete.php">Update / Delete</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"><span class="glyphicon glyphicon glyphicon-user"></span> <?php session_start();
-                                                                                  echo "Hello, " . $_SESSION['name']; ?></a></li>
+        <li><a href="#"><span class="glyphicon glyphicon glyphicon-user"></span> <?php session_start();echo "Hello, " . $_SESSION['name']; ?></a></li>
 
         <li><a href="get_started.php"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       </ul>
@@ -72,7 +71,7 @@
 
           $count += 1;
           ?>
-        <form method="post" action="print_seller_detail.php? id=<?php echo $row["id"]; ?>">
+        <form method="post" action="display.php? username=<?php echo $row["username"]; ?>">
           <div class="row" style="background-color:thistle">
             <div class="col-md-6">
                 <div class="product">
@@ -94,6 +93,12 @@
       <?php
           echo "<hr/><br/><br/>";
         }
+      }
+
+      else
+      {
+
+        ?><center><i class="fas fa-poop fa fa-9x"></i><br/> Oops! No Data Found<br/></center><?php
       }
       ?>
 
