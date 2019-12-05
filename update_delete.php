@@ -66,7 +66,8 @@
                 <li><a href="add_item_to_sale.php">Add New Item</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-            <li><a href="#"><span class="glyphicon glyphicon glyphicon-user"></span> <?php session_start();echo "Hello, " . $_SESSION['name']; ?></a></li>
+                <li><a href="#"><span class="glyphicon glyphicon glyphicon-user"></span> <?php session_start();
+                                                                                            echo "Hello, " . $_SESSION['name']; ?></a></li>
                 <li><a href="get_started.php"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
             </ul>
         </div>
@@ -75,7 +76,7 @@
     <div class="container">
 
         <div style="clear: both"></div>
-        <h3 class="title2">Your Item Details Cart Details</h3><br /><br />
+        <h3 class="title2">Your Items</h3><br /><br />
         <div class="table-responsive">
             <table class="table table-bordered">
                 <thead class="thead-dark">
@@ -114,7 +115,7 @@
                             <td><b><?php echo $row["item_name"]; ?></b></td>
                             <td><b><?php echo $row["price"]; ?></b></td>
                             <td><b><?php echo $row["decription"]; ?></b></td>
-                            <td><a href="Cart.php?action=delete&id=<?php echo $row["id"]; ?>"><span class="text-danger"><i class="fas fa-pencil fa fa-2x"></i></span></a></td>
+                            <td><a href="update.php?action=update&id=<?php echo $row["id"]; ?>&pic=<?php echo $row['pic']; ?>"><span class="text-danger"><i class="fas fa-pencil fa fa-2x"></i></span></a></td>
                             <td><a href="delete.php?action=delete&id=<?php echo $row["id"]; ?>"><span class="text-danger"><i class="fas fa-trash-alt fa fa-2x"></i></span></a></td>
                         </tr>
                 <?php

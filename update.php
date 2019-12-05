@@ -1,46 +1,39 @@
 <?php
-
 session_start();
-
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "mite_olx";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
+
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = $_SESSION['email'];
-    $n1 = (rand(10, 5000));
-    $n2 = date("Ymd");
-    $n4 = time();
-    $id = $n1 . $n2 . $n4;
-    $i_name = $_POST['item_name'];
-    $na = $_FILES["image"]["name"];
-    $ext = explode(".", $na);
-    $_FILES["image"]["name"] = $id . "." . end($ext);
-    $filepath = "uploads/" . $_FILES["image"]["name"];
+    $id = $_GET['id'];
+    $name = $_POST['item_name'];
+    $pic = $_GET['pic'];
     $price = $_POST['price'];
-    move_uploaded_file($_FILES["image"]["tmp_name"], $filepath);
     $description = $_POST['description'];
 
-    $sql = "INSERT INTO item_to_sale VALUES ('$user' , '$id' , '$i_name' , '$price' , '$filepath' , '$description')";
-
-    if ($conn->query($sql) === TRUE) {
+    $query1 = "DELETE FROM item_to_sale where id = '$id'";
+    $query2 = "INSERT INTO item_to_sale VALUES ('$user' , '$id' , '$name' , '$price' , '$pic' , '$description' )";
+    if (($conn->query($query1) === TRUE) && ($conn->query($query2) === TRUE)) {
         ?>
         <script>
-            alert("Item Added Successfully!!");
+            alert("Item Updated Successfully!!");
             window.location = "http://localhost/mite_olx/after_login.php";
         </script>
     <?php
         } else {
             ?>
         <script>
-            alert("Failed to Add Item!!");
-            window.location = "http://localhost/mite_olx/add_item_to_sale.php";
+            alert("Failed to Updated Item!!");
+            window.location = "http://localhost/mite_olx/update_delete.php";
         </script>
 <?php
     }
@@ -81,11 +74,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
 
     </nav>
+
     <div class="container">
         <br />
         <div style="text-align: center; color: white; text-shadow: 3px 3px black;">
-            <h2>Add Item to Sale</h2>
+            <h2>Update Item Here</h2>
         </div>
+        <?php
+
+
+        $id = $_GET['id'];
+
+        $query = "select * from item_to_sale where id = '$id'";
+        $result = mysqli_query($conn, $query);
+        $row = mysqli_fetch_array($result);
+        ?>
         <br />
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
@@ -95,24 +98,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <form role="Form" method="post" action="#" accept-charset="UTF-8" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="fname">Item - Name</label>
-                                <input type="text" id="fname" class="form-control" name="item_name" placeholder="Enter Your Item Name">
-                            </div>
-                            <div class="form-group">
-                                <label>Item Image</label>
-                                <input type="file" name="image" id="pic">
-                                <div id="error_msg" style="color:red"></div>
+                                <input type="text" id="fname" class="form-control" name="item_name" value="<?php echo $row['item_name']; ?>">
                             </div>
                             <div class="form-group">
                                 <label for="lname">Price</label>
-                                <input type="text" id="lname" class="form-control" name="price" placeholder="Enter Price (0 - 9999)">
+                                <input type="text" id="lname" class="form-control" name="price" value="<?php echo $row['price']; ?>">
                             </div>
                             <div class="form-group">
                                 <label for="emailaddr">Description</label>
-                                <textarea class="form-control" id="message" name="description" placeholder="Item Description*" required=""></textarea>
+                                <textarea class="form-control" id="message" name="description"><?php echo $row['decription']; ?></textarea>
                             </div>
 
                             <div class="form-group text-center">
-                                <button type="submit" class="btn btn-primary btn-lg" id="submitbtn" name="submit">Add</button>
+                                <button type="submit" class="btn btn-primary btn-lg" id="submitbtn" name="submit">Update</button>
                             </div>
                         </form>
                     </div>

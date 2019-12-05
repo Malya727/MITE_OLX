@@ -19,47 +19,47 @@
         }
     </style>
 </head>
+
 <body class="bg">
     <h3 style="text-align:center ; color:red ; text-shadow:2px 2px black ;">To Buy this Product Please Contact:</h3>
     <div class="container">
-        <br/><br/><br/>
+        <br /><br /><br />
         <div class="row">
             <div class="col-md-3"></div>
-                <div class="col-md-6" style="background-color:white">
-<?php
+            <div class="col-md-6" style="background-color:white">
+                <?php
+                session_start();
+                $servername = "localhost";
+                $username = "root";
+                $password = "";
+                $dbname = "mite_olx";
 
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "mite_olx";
+                $conn = new mysqli($servername, $username, $password, $dbname);
 
-        $conn = new mysqli($servername, $username, $password, $dbname);
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
 
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
+                $id = $_GET['email'];
+                $sql = "SELECT * FROM user WHERE email = '$id' ";
+                $result1 = mysqli_query($conn, $sql);
+                $row = mysqli_fetch_array($result1, MYSQLI_ASSOC);
+                ?>
+                <center>
+                    <h2>Name : <?php echo $row['name']; ?></h2><br />
+                    <h2>Phone Number : <?php echo $row['phone_number']; ?></h2><br />
+                    <h2>Branch : <?php echo $row['branch']; ?></h2><br />
+                    <h2>Email : <?php echo $row['email']; ?></h2><br />
+                    <a href="after_login.php"><button class="btn btn-primary">Return Back</button></a></br />
+                </center>
 
-        $id = $_GET['username'];
-        $sql = "SELECT * from user where email = '$id' ";
-        $result = mysqli_query($conn, $sql);
-        $row = mysqli_fetch_array($result);
-        ?>
-        <center><h2 >Name : <?php echo $row['name'];?></h2><br/>
-                <h2 >Phone Number : <?php echo $row['phone_number'];?></h2><br/>
-                <h2 >Branch : <?php echo $row['branch'];?></h2><br/>
-                <h2 >Email : <?php echo $row['email'];?></h2><br/>
-                <a href="after_login.php"><button class="btn btn-primary">Return Back</button></a></br/>
-        </center>
-
-        <?php
-        $conn->close();
-
-?>
+                <?php
+                $conn->close();
+                ?>
+            </div>
         </div>
-        <div class="col-md-3"></div>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

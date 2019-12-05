@@ -33,9 +33,18 @@
         <li><a href="add_item_to_sale.php">Add New Item</a></li>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <li><a href="update_delete.php">Update / Delete</a></li>
+        <li>
+          <div class="d-flex justify-content-center h-100">
+
+            <form method="POST" action="">
+              <span><input type="text" placeholder="Search.." name="search">
+                <button type="submit"><i class="fa fa-search"></i></button></span>
+            </form>
+        </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"><span class="glyphicon glyphicon glyphicon-user"></span> <?php session_start();echo "Hello, " . $_SESSION['name']; ?></a></li>
+        <li><a href="#"><span class="glyphicon glyphicon glyphicon-user"></span> <?php session_start();
+                                                                                  echo "Hello, " . $_SESSION['name']; ?></a></li>
 
         <li><a href="get_started.php"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       </ul>
@@ -53,60 +62,101 @@
 
     $conn = new mysqli($servername, $username, $password, $dbname);
 
-    if ($conn->connect_error) 
-    {
+    if ($conn->connect_error) {
       die("Connection failed: " . $conn->connect_error);
     }
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      $search = $_POST['search'];
+    } else {
+      $search = "";
+    }
 
-    ?>
-    <div class="container" style="width: 65%">
-      <h2 style="text-align:center">OLX Cart</h2>
-      <hr /><br />
-      <?php
-      $query = "SELECT * FROM item_to_sale";
-      $result = mysqli_query($conn, $query);
-      if (mysqli_num_rows($result) > 0) {
-        $count = 0;
-        while ($row = mysqli_fetch_array($result)) {
-
-          $count += 1;
-          ?>
-        <form method="post" action="display.php? username=<?php echo $row["username"]; ?>">
-          <div class="row" style="background-color:thistle">
-            <div class="col-md-6">
-                <div class="product">
-                  <img src="<?php echo $row["pic"]; ?>" class="img-responsive">
-                </div>
-              </div>
-              
-              <div class="col-md-6">
-                <div class="product">
-                  <h5 style="color:black">Item Name : <?php echo $row["item_name"]; ?></h5>
-                  <h5 style="color:black">Description : <?php echo $row["decription"]; ?></h5>
-                  <h5 class="text-danger">Price : <?php echo $row["price"]; ?></h5>
-                  <input type="submit" name="add" style="margin-top: 5px;" class="btn btn-primary" value="View Seller Details">
-                </div>
-              </div>
-              
-            </div>
-        </form>
-      <?php
-          echo "<hr/><br/><br/>";
-        }
-      }
-
-      else
-      {
-
-        ?><center><i class="fas fa-poop fa fa-9x"></i><br/> Oops! No Data Found<br/></center><?php
-      }
+    if (empty($search)) {
       ?>
+      <div class="container" style="width: 65%">
+        <h2 style="text-align:center">OLX Cart</h2>
+        <hr /><br />
+        <?php
+          $query = "SELECT * FROM item_to_sale ORDER BY item_name";
+          $result = mysqli_query($conn, $query);
+          if (mysqli_num_rows($result) > 0) {
+            $count = 0;
+            while ($row = mysqli_fetch_array($result)) {
+              $count += 1;
+              ?>
+            <form method="post" action="display.php?email=<?php echo $row["username"]; ?>">
+              <div class="row" style="background-color:thistle">
+                <div class="col-md-6">
+                  <div class="product">
+                    <img src="<?php echo $row["pic"]; ?>" alt="Image Not Found" class="img-responsive">
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="product">
+                    <h5 style="color:black">Item Name : <?php echo $row["item_name"]; ?></h5>
+                    <h5 style="color:black">Description : <?php echo $row["decription"]; ?></h5>
+                    <h5 class="text-danger">Price : <?php echo $row["price"]; ?></h5>
+                    <input type="submit" name="add" style="margin-top: 5px;" class="btn btn-primary" value="View Seller Details">
+                  </div>
+                </div>
+
+              </div>
+            </form>
+          <?php
+                echo "<hr/><br/><br/>";
+              }
+            } else {
+
+              ?><center><i class="fas fa-poop fa fa-9x"></i><br /> Oops! No Data Found<br /></center><?php
+                                                                                                    }
+                                                                                                  } else {
+                                                                                                    ?>
+        <div class="container" style="width: 65%">
+          <h2 style="text-align:center">OLX Cart</h2>
+          <hr /><br />
+          <?php
+            $query = "SELECT * FROM item_to_sale WHERE item_name LIKE '%$search%'";
+            $result = mysqli_query($conn, $query);
+            if (mysqli_num_rows($result) > 0) {
+              $count = 0;
+              while ($row = mysqli_fetch_array($result)) {
+                $count += 1;
+                ?>
+              <form method="post" action="display.php?email=<?php echo $row["username"]; ?>">
+                <div class="row" style="background-color:thistle">
+                  <div class="col-md-6">
+                    <div class="product">
+                      <img src="<?php echo $row["pic"]; ?>" alt="Image Not Found" class="img-responsive">
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="product">
+                      <h5 style="color:black">Item Name : <?php echo $row["item_name"]; ?></h5>
+                      <h5 style="color:black">Description : <?php echo $row["decription"]; ?></h5>
+                      <h5 class="text-danger">Price : <?php echo $row["price"]; ?></h5>
+                      <input type="submit" name="add" style="margin-top: 5px;" class="btn btn-primary" value="View Seller Details">
+                    </div>
+                  </div>
+
+                </div>
+              </form>
+            <?php
+                  echo "<hr/><br/><br/>";
+                }
+              } else {
+
+                ?><center><i class="fas fa-poop fa fa-9x"></i><br /> Oops! No Data Found<br /></center><?php
+                                                                                                    }
+                                                                                                  }
+                                                                                                  ?>
 
 
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
 </body>
 
 </html>
